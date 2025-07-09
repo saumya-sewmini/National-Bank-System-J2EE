@@ -9,6 +9,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "accounts")
+@NamedQueries({
+        @NamedQuery(
+                name = "Account.findByAccountNo",
+                query = "select a from Account a where a.accountNumber=:accountNo"
+        )
+})
 public class Account implements Serializable {
 
     @Id

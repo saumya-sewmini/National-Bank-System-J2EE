@@ -10,6 +10,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 
@@ -36,6 +37,8 @@ public class CustomerLogin extends HttpServlet {
         System.out.println("Auth Status : " + status);
 
         if (status == AuthenticationStatus.SUCCESS) {
+            HttpSession session = request.getSession();
+            session.setAttribute("user", email);
             response.sendRedirect(request.getContextPath() + "/customer");
         }else {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
