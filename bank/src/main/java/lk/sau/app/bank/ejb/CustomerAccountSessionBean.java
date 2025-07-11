@@ -43,4 +43,11 @@ public class CustomerAccountSessionBean implements AccountService {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public Account getAccountByEmail(String email) {
+        return em.createNamedQuery("Account.getAccountByEmail", Account.class)
+                .setParameter("email", email)
+                .getSingleResult();
+    }
 }

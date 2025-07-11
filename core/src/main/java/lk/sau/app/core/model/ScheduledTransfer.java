@@ -8,6 +8,16 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "scheduled_transfers")
+@NamedQueries({
+        @NamedQuery(
+                name = "ScheduledTransfer.findBySourceAccount",
+                query = "select s from ScheduledTransfer s where s.sourceAccount.accountNumber = :accountNo"
+        ),
+        @NamedQuery(
+                name = "ScheduledTransfer.findDue",
+                query = "select s from ScheduledTransfer s where s.nextExecutionDate <= CURRENT_DATE and s.status = 'ACTIVE'"
+        )
+})
 public class ScheduledTransfer implements Serializable {
 
     @Id

@@ -13,6 +13,10 @@ import java.util.List;
         @NamedQuery(
                 name = "Account.findByAccountNo",
                 query = "select a from Account a where a.accountNumber=:accountNo"
+        ),
+        @NamedQuery(
+                name = "Account.getAccountByEmail",
+                query = "select a from Account a where a.user.email =:email"
         )
 })
 public class Account implements Serializable {

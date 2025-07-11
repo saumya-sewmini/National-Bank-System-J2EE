@@ -64,30 +64,55 @@
     </style>
 </head>
 <body>
-<h2>Test Fund Transfer</h2>
-<form action="${pageContext.request.contextPath}/transfer" method="POST">
-    <div class="form-group">
-        <label for="source">Source Account No</label>
-        <input type="text" id="source" name="sourceAccount" required>
-    </div>
-    <div class="form-group">
-        <label for="destination">Destination Account No</label>
-        <input type="text" id="destination" name="toAccount" required>
-    </div>
-    <div class="form-group">
-        <label for="amount">Amount</label>
-        <input type="number" id="amount" name="amount" required>
-    </div>
-    <div class="form-group">
-        <label for="desc">Description</label>
-        <input type="text" id="desc" name="description">
-    </div>
-    <button type="submit">Transfer</button>
-</form>
 
-<c:if test="${not empty message}">
-    <div class="msg ${success ? 'success' : 'error'}">${message}</div>
-</c:if>
+    <h2>Test Fund Transfer</h2>
+    <form action="${pageContext.request.contextPath}/transfer" method="POST">
+        <div class="form-group">
+            <label for="source">Source Account No</label>
+            <input type="text" id="source" name="sourceAccount" required>
+        </div>
+        <div class="form-group">
+            <label for="destination">Destination Account No</label>
+            <input type="text" id="destination" name="toAccount" required>
+        </div>
+        <div class="form-group">
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" required>
+        </div>
+        <div class="form-group">
+            <label for="desc">Description</label>
+            <input type="text" id="desc" name="description">
+        </div>
+        <button type="submit">Transfer</button>
+    </form>
+
+    <c:if test="${not empty message}">
+        <div class="msg ${success ? 'success' : 'error'}">${message}</div>
+    </c:if>
+
+    <h2>Scheduled Transfers</h2>
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th>To Account</th>
+            <th>Amount</th>
+            <th>Next Execution</th>
+            <th>Frequency</th>
+            <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${scheduledTransfers}" var="s">
+            <tr>
+                <td>${s.targetAccount.accountNumber}</td>
+                <td>Rs ${s.amount}</td>
+                <td>${s.nextExecutionDate}</td>
+                <td>${s.frequency}</td>
+                <td>${s.status}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 
 </body>
 </html>
