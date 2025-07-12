@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lk.sau.app.core.model.Account;
+import lk.sau.app.core.model.UserType;
 import lk.sau.app.core.service.AccountService;
 
 import java.io.IOException;
@@ -51,9 +52,14 @@ public class CustomerLogin extends HttpServlet {
             if (account != null) {
                 session.setAttribute("accountNumber", account.getAccountNumber());
                 System.out.println("Stored Account Number : " + account.getAccountNumber());
-            }
 
-            response.sendRedirect(request.getContextPath() + "/customer");
+                if (account.getUser().getUserType() == UserType.CUSTOMER) {
+                    response.sendRedirect(request.getContextPath() + "/customer");
+                } else if (account.getUser().getUserType() == UserType.ADMIN) {
+                    response.sendRedirect(request.getContextPath() + "/admin");
+                }
+
+            }
         }else {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }
