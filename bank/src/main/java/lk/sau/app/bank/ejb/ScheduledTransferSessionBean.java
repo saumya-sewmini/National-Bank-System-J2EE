@@ -24,6 +24,37 @@ public class ScheduledTransferSessionBean implements ScheduledTransferService {
     }
 
     @Override
+    public void addScheduledTransfer(ScheduledTransfer transfer) {
+        em.persist(transfer);
+        System.out.println("Scheduled transfer added: " + transfer.getScheduleId());
+    }
+
+    @Override
+    public void updateScheduledTransfer(Long id, double amount, Frequency frequency) {
+        ScheduledTransfer transfer = em.find(ScheduledTransfer.class, id);
+        if (transfer != null) {
+            transfer.setAmount(amount);
+            transfer.setFrequency(frequency);
+            em.merge(transfer);
+        }
+    }
+
+    @Override
+    public void cancelScheduledTransfer(Long scheduleId) {
+        ScheduledTransfer st = em.find(ScheduledTransfer.class, scheduleId);
+        if (st != null) {
+            st.setStatus(ScheduleStatus.CANCELLED);
+            em.merge(st);
+        }
+    }
+
+    @Override
+    public List<ScheduledTransfer> getAllScheduledTransfers() {
+        return em.createNamedQuery("ScheduledTransfer.getAllScheduledTransfers", ScheduledTransfer.class)
+                .getResultList();
+    }
+
+    @Override
     @Schedule(hour = "0", minute = "0", second = "0", persistent = false)
     public void processDueTransfers() {
         List<ScheduledTransfer> dueTransfers = em.createNamedQuery("ScheduledTransfer.findBySourceAccount", ScheduledTransfer.class)
@@ -57,11 +88,12 @@ public class ScheduledTransferSessionBean implements ScheduledTransferService {
                 } else if (st.getFrequency() == Frequency.DAILY) {
                     st.setNextExecutionDate(st.getNextExecutionDate().plusDays(1));
                 }
-                em.persist(txn);
+                em.persist(st);
             }else {
                 System.out.println("Insufficient funds for scheduled transfer ID: " + st.getScheduleId());
             }
         }
         System.out.println("Scheduled transfer processing done: " + dueTransfers.size() + " items.");
     }
+
 }

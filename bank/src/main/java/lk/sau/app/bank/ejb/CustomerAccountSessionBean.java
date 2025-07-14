@@ -50,4 +50,11 @@ public class CustomerAccountSessionBean implements AccountService {
                 .setParameter("email", email)
                 .getSingleResult();
     }
+
+    @Override
+    public Account getAccountByAccountNo(String accountNo) {
+        return em.createNamedQuery("Account.findByAccountNo", Account.class)
+                .setParameter("accountNo", accountNo)
+                .getSingleResult();
+    }
 }

@@ -16,6 +16,10 @@ import java.time.LocalDateTime;
         @NamedQuery(
                 name = "ScheduledTransfer.findDue",
                 query = "select s from ScheduledTransfer s where s.nextExecutionDate <= CURRENT_DATE and s.status = 'ACTIVE'"
+        ),
+        @NamedQuery(
+                name = "ScheduledTransfer.getAllScheduledTransfers",
+                query = "select s from ScheduledTransfer s"
         )
 })
 public class ScheduledTransfer implements Serializable {
