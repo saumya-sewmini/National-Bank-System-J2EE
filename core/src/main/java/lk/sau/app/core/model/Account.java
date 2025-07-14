@@ -18,6 +18,10 @@ import java.util.List;
                 name = "Account.getAccountByEmail",
                 query = "select a from Account a where a.user.email =:email"
         ),
+        @NamedQuery(
+                name = "Account.getAccountStatus",
+                query = "select a from Account a where a.status = :status"
+        )
 })
 public class Account implements Serializable {
 
