@@ -114,5 +114,36 @@
         </tbody>
     </table>
 
+    <h2>All Transactions</h2>
+    <table class="data-table">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>To Account</th>
+            <th>Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${transactions}" var="txn">
+            <tr>
+                <td>${txn.transactionDate}</td>
+                <td>${txn.type}</td>
+                <td>Rs ${txn.amount}</td>
+                <td>
+                    <c:choose>
+                        <c:when test="${txn.destinationAccount != null}">
+                            ${txn.destinationAccount.accountNumber}
+                        </c:when>
+                        <c:otherwise>-</c:otherwise>
+                    </c:choose>
+                </td>
+                <td>${txn.description}</td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
+
 </body>
 </html>

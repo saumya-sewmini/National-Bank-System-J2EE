@@ -7,6 +7,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "transactions")
+@NamedQueries({
+        @NamedQuery(
+                name = "Transaction.findByAccountNumber",
+                query = "SELECT t FROM Transaction t WHERE t.account.accountNumber = :accountNo ORDER BY t.transactionDate DESC"
+        )
+})
 public class Transaction implements Serializable {
 
     @Id
