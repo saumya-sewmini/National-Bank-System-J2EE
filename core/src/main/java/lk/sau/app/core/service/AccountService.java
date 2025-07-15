@@ -7,4 +7,5 @@ public interface AccountService {
     void debitFromAccount(String accountNo, double amount);
     Account getAccountByEmail(String email);
     Account getAccountByAccountNo(String accountNo);
+    void createAccount(Account account);
 }

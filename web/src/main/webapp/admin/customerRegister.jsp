@@ -230,6 +230,16 @@
             <input type="password" id="confirmPassword" name="confirmPassword" required>
         </div>
 
+        <div class="form-group">
+            <label>Account Number (Auto Generated)</label>
+            <input type="text" value="Will be assigned after registration" disabled>
+        </div>
+
+        <div class="form-group">
+            <label for="balance">Initial Deposit (Rs.) <span style="color: #e74c3c;">*</span></label>
+            <input type="number" id="balance" name="balance" required min="0">
+        </div>
+
         <button type="submit" class="register-button">Register Account</button>
     </form>
 </div>

@@ -57,4 +57,9 @@ public class CustomerAccountSessionBean implements AccountService {
                 .setParameter("accountNo", accountNo)
                 .getSingleResult();
     }
+
+    @Override
+    public void createAccount(Account account) {
+        em.persist(account);
+    }
 }
