@@ -57,7 +57,7 @@ public class ScheduledTransferSessionBean implements ScheduledTransferService {
     @Override
     @Schedule(hour = "0", minute = "0", second = "0", persistent = false)
     public void processDueTransfers() {
-        List<ScheduledTransfer> dueTransfers = em.createNamedQuery("ScheduledTransfer.findBySourceAccount", ScheduledTransfer.class)
+        List<ScheduledTransfer> dueTransfers = em.createNamedQuery("ScheduledTransfer.findDue", ScheduledTransfer.class)
                 .getResultList();
 
         for (ScheduledTransfer st : dueTransfers) {

@@ -25,7 +25,7 @@ public class InterestProcessorSessionBean implements InterestService {
         int count = 0;
 
         for (Account a : accounts) {
-            double interest = 0.01;
+            double interest = 1;
 
             a.setBalance(a.getBalance() + interest);
             em.merge(a);
