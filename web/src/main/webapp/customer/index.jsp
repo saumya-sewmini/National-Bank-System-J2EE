@@ -145,5 +145,9 @@
         </tbody>
     </table>
 
+    <form action="${pageContext.request.contextPath}/download-transactions" method="get">
+        <button type="submit">Download PDF</button>
+    </form>
+
 </body>
 </html>
