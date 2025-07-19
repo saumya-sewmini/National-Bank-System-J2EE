@@ -44,6 +44,7 @@ public class ScheduledTransfer implements Serializable {
     @Column(name = "frequency")
     private Frequency frequency;
 
+    @Column(name = "nextExecutionDate")
     private LocalDate nextExecutionDate;
 
     @Enumerated(EnumType.STRING)

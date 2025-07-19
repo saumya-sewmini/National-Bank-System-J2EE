@@ -60,43 +60,53 @@ public class ScheduledTransferSessionBean implements ScheduledTransferService {
     @Schedule(hour = "0", minute = "0", second = "0", persistent = false)
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void processDueTransfers() {
-        List<ScheduledTransfer> dueTransfers = em.createNamedQuery("ScheduledTransfer.findDue", ScheduledTransfer.class)
-                .getResultList();
 
-        for (ScheduledTransfer st : dueTransfers) {
-            Account source = st.getSourceAccount();
-            Account target = st.getTargetAccount();
-            double amount = st.getAmount();
+        try {
+            System.out.println("Processing Due Transfers: " + LocalDateTime.now());
 
-            if (source.getBalance() >= amount) {
-                source.setBalance(source.getBalance() - amount);
-                target.setBalance(target.getBalance() + amount);
+            List<ScheduledTransfer> dueTransfers = em.createNamedQuery("ScheduledTransfer.findDue", ScheduledTransfer.class)
+                    .getResultList();
 
-                em.merge(target);
-                em.merge(source);
+            for (ScheduledTransfer st : dueTransfers) {
+                Account source = st.getSourceAccount();
+                Account target = st.getTargetAccount();
+                double amount = st.getAmount();
 
-                Transaction txn = new Transaction();
-                txn.setAccount(source);
-                txn.setDestinationAccount(target);
-                txn.setType(TransactionType.TRANSFER);
-                txn.setAmount(amount);
-                txn.setDescription("Scheduled Transfer");
-                txn.setTransactionDate(LocalDateTime.now());
-                em.persist(txn);
+                if (source.getBalance() >= amount) {
+                    source.setBalance(source.getBalance() - amount);
+                    target.setBalance(target.getBalance() + amount);
 
-                if (st.getFrequency() == Frequency.MONTHLY){
-                    st.setNextExecutionDate(st.getNextExecutionDate().plusMonths(1));
-                } else if (st.getFrequency() == Frequency.WEEKLY) {
-                    st.setNextExecutionDate(st.getNextExecutionDate().plusWeeks(1));
-                } else if (st.getFrequency() == Frequency.DAILY) {
-                    st.setNextExecutionDate(st.getNextExecutionDate().plusDays(1));
+                    em.merge(target);
+                    em.merge(source);
+
+                    Transaction txn = new Transaction();
+                    txn.setAccount(source);
+                    txn.setDestinationAccount(target);
+                    txn.setType(TransactionType.TRANSFER);
+                    txn.setAmount(amount);
+                    txn.setDescription("Scheduled Transfer");
+                    txn.setTransactionDate(LocalDateTime.now());
+                    em.persist(txn);
+
+                    if (st.getFrequency() == Frequency.MONTHLY){
+                        st.setNextExecutionDate(st.getNextExecutionDate().plusMonths(1));
+                    } else if (st.getFrequency() == Frequency.WEEKLY) {
+                        st.setNextExecutionDate(st.getNextExecutionDate().plusWeeks(1));
+                    } else if (st.getFrequency() == Frequency.DAILY) {
+                        st.setNextExecutionDate(st.getNextExecutionDate().plusDays(1));
+                    }
+                    em.persist(st);
+                }else {
+                    System.out.println("Insufficient funds for scheduled transfer ID: " + st.getScheduleId());
                 }
-                em.persist(st);
-            }else {
-                System.out.println("Insufficient funds for scheduled transfer ID: " + st.getScheduleId());
             }
+            System.out.println("Scheduled transfer processing done: " + dueTransfers.size() + " items.");
+
+        } catch (Exception e) {
+            System.out.println("Scheduled transfer processing failed: " + e.getMessage());
+            e.printStackTrace();
         }
-        System.out.println("Scheduled transfer processing done: " + dueTransfers.size() + " items.");
+
     }
 
 }

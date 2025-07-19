@@ -21,38 +21,48 @@ public class InterestProcessorSessionBean implements InterestService {
     @Schedule(hour = "0", minute = "0", second = "0", persistent = false)
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void applyDailyInterest() {
-        List<Account> accounts = em.createNamedQuery("Account.getAccountStatus", Account.class)
-                .setParameter("status", AccountStatus.ACTIVE)
-                .getResultList();
 
-        int count = 0;
+        System.out.println("Scheduled interest processor triggered at: " + LocalDateTime.now());
 
-        for (Account a : accounts) {
-            double interest = 1;
+        try {
 
-            a.setBalance(a.getBalance() + interest);
-            em.merge(a);
+            List<Account> accounts = em.createNamedQuery("Account.getAccountStatus", Account.class)
+                    .setParameter("status", AccountStatus.ACTIVE)
+                    .getResultList();
 
-            // Save in InterestAccrual
-            InterestAccrual accrual = new InterestAccrual();
-            accrual.setAccount(a);
-            accrual.setAmount(interest);
-            accrual.setTransactionDate(LocalDateTime.now());
-            em.persist(accrual);
+            int count = 0;
 
-            //Add a transaction log
-            Transaction txn = new Transaction();
-            txn.setAccount(a);
-            txn.setAmount(interest);
-            txn.setType(TransactionType.INTEREST);
-            txn.setDescription("Daily interest credit");
-            txn.setTransactionDate(LocalDateTime.now());
-            em.persist(txn);
+            for (Account a : accounts) {
+                double interest = 1;
 
-            count++;
+                a.setBalance(a.getBalance() + interest);
+                em.merge(a);
+
+                // Save in InterestAccrual
+                InterestAccrual accrual = new InterestAccrual();
+                accrual.setAccount(a);
+                accrual.setAmount(interest);
+                accrual.setTransactionDate(LocalDateTime.now());
+                em.persist(accrual);
+
+                //Add a transaction log
+                Transaction txn = new Transaction();
+                txn.setAccount(a);
+                txn.setAmount(interest);
+                txn.setType(TransactionType.INTEREST);
+                txn.setDescription("Daily interest credit");
+                txn.setTransactionDate(LocalDateTime.now());
+                em.persist(txn);
+
+                count++;
+            }
+
+            System.out.println("Daily interest applied to " + count + " accounts");
+
+        }catch (Exception e) {
+            System.out.println("Error during scheduled interest processing: " + e.getMessage());
+            e.printStackTrace();
         }
-
-        System.out.println("Daily interest applied to " + count + " accounts");
     }
 
     // Manual trigger (for testing)
