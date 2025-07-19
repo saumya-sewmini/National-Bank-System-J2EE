@@ -6,15 +6,11 @@ import jakarta.inject.Inject;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
-import lk.sau.app.core.model.Account;
-import lk.sau.app.core.service.AccountService;
 
-import javax.naming.InitialContext;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.util.logging.Logger;
 
 @Interceptor
 public class TransferLoggingInterceptor {
@@ -61,7 +57,7 @@ public class TransferLoggingInterceptor {
         }
 
         if (error != null) {
-            throw error; // Rethrow exception after logging
+            throw error;
         }
 
         return result;
