@@ -2,6 +2,8 @@ package lk.sau.app.bank.ejb;
 
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lk.sau.app.core.model.*;
@@ -17,6 +19,7 @@ public class InterestProcessorSessionBean implements InterestService {
 
     @Override
     @Schedule(hour = "0", minute = "0", second = "0", persistent = false)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void applyDailyInterest() {
         List<Account> accounts = em.createNamedQuery("Account.getAccountStatus", Account.class)
                 .setParameter("status", AccountStatus.ACTIVE)

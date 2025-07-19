@@ -6,6 +6,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lk.sau.app.core.model.Account;
 import lk.sau.app.core.service.TransferService;
 
 import java.io.IOException;
@@ -18,10 +19,9 @@ public class Transfer extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String sourceAccount = request.getParameter("sourceAccount");
+        String sourceAccount = (String) request.getSession().getAttribute("accountNumber");
         String destinationAccount = request.getParameter("toAccount");
         double amount = Double.parseDouble(request.getParameter("amount"));
-        String description = request.getParameter("description");
 
         try {
             transferService.transferAmount(sourceAccount, destinationAccount, amount);

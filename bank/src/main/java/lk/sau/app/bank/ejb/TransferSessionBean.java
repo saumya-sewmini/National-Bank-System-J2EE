@@ -2,8 +2,12 @@ package lk.sau.app.bank.ejb;
 
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
+import jakarta.interceptor.Interceptors;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import lk.sau.app.bank.interceptor.TransferLoggingInterceptor;
 import lk.sau.app.core.model.Account;
 import lk.sau.app.core.model.Transaction;
 import lk.sau.app.core.model.TransactionType;
@@ -25,6 +29,8 @@ public class TransferSessionBean implements TransferService {
     private TransactionService transactionService;
 
     @Override
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
+    @Interceptors({TransferLoggingInterceptor.class})
     public void transferAmount(String sourceAccountNo, String destinationAccountNo, double amount) {
         //load accounts
         Account sourceAccount = em.createNamedQuery("Account.findByAccountNo", Account.class)

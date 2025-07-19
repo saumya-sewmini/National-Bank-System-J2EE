@@ -69,7 +69,7 @@
     <form action="${pageContext.request.contextPath}/transfer" method="POST">
         <div class="form-group">
             <label for="source">Source Account No</label>
-            <input type="text" id="source" name="sourceAccount" required>
+            <input type="text" id="source" name="sourceAccount" value="${sessionScope.accountNumber}" readonly>
         </div>
         <div class="form-group">
             <label for="destination">Destination Account No</label>
@@ -79,10 +79,7 @@
             <label for="amount">Amount</label>
             <input type="number" id="amount" name="amount" required>
         </div>
-        <div class="form-group">
-            <label for="desc">Description</label>
-            <input type="text" id="desc" name="description">
-        </div>
+
         <button type="submit">Transfer</button>
     </form>
 

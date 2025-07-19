@@ -2,6 +2,8 @@ package lk.sau.app.bank.ejb;
 
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
@@ -56,6 +58,7 @@ public class ScheduledTransferSessionBean implements ScheduledTransferService {
 
     @Override
     @Schedule(hour = "0", minute = "0", second = "0", persistent = false)
+    @TransactionAttribute(TransactionAttributeType.REQUIRED)
     public void processDueTransfers() {
         List<ScheduledTransfer> dueTransfers = em.createNamedQuery("ScheduledTransfer.findDue", ScheduledTransfer.class)
                 .getResultList();
